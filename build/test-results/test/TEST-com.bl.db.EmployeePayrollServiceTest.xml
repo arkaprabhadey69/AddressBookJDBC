@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bl.db.EmployeePayrollServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-10-29T10:00:55" hostname="LAPTOP-JP0FR8LN" time="0.482">
+  <properties/>
+  <testcase name="givenNewAddressForEmployee_WhenUpdated_ShouldMatch" classname="com.bl.db.EmployeePayrollServiceTest" time="0.482"/>
+  <system-out><![CDATA[Connecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+Connected com.mysql.cj.jdbc.ConnectionImpl@3ed99c4
+Connecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+Connected com.mysql.cj.jdbc.ConnectionImpl@11b0ac6d
+Connecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+Connected com.mysql.cj.jdbc.ConnectionImpl@48a29c2c
+Connecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+Connected com.mysql.cj.jdbc.ConnectionImpl@15d2d7b9
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

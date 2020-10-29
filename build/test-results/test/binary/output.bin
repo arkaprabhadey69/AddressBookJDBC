@@ -1,0 +1,8 @@
+NConnecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+4Connected com.mysql.cj.jdbc.ConnectionImpl@3ed99c4
+NConnecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+5Connected com.mysql.cj.jdbc.ConnectionImpl@11b0ac6d
+NConnecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+5Connected com.mysql.cj.jdbc.ConnectionImpl@48a29c2c
+NConnecting to . . .jdbc:mysql://localhost:3306/payroll_service?userSSL=false
+5Connected com.mysql.cj.jdbc.ConnectionImpl@15d2d7b9
