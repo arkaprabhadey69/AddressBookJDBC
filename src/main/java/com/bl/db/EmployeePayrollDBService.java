@@ -8,6 +8,7 @@ import java.util.List;
 public class EmployeePayrollDBService {
     private PreparedStatement employeePayrollDataStatement;
     private static EmployeePayrollDBService employeePayrollDBService;
+    private static final String getCount = "SELECT COUNT(*) as Count FROM employee_payroll WHERE gender =  ? ";
 
     private EmployeePayrollDBService() {
 
@@ -33,6 +34,23 @@ public class EmployeePayrollDBService {
         return employeePayrollDataList;
 
     }
+    public int getEmployeeCount(String gender)  {
+        int count=0;
+        try (Connection connection = this.getConnection();) {
+            employeePayrollDataStatement = connection.prepareStatement(getCount);
+            employeePayrollDataStatement.setString(1,gender);
+            ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt("Count");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return count;
+
+    }
+
     public List<EmployeePayrollData> readDataWithinDate() throws SQLException {
         String sql = "select * from employee_payroll where start between cast('2019-01-01' as date) and DATE(NOW());";
         List<EmployeePayrollData> employeePayrollDataList = new ArrayList<>();
@@ -111,9 +129,13 @@ public class EmployeePayrollDBService {
     }
 
     private void prepareStatementForEmployeeData() throws SQLException {
-        Connection connection = this.getConnection();
-        String sql = "SELECT * FROM employee_payroll where name= ?";
-        employeePayrollDataStatement = connection.prepareStatement(sql);
+        try {
+            Connection connection = this.getConnection();
+            String sql = "SELECT * FROM employee_payroll where name= ?";
+            employeePayrollDataStatement = connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
