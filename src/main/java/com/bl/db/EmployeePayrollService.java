@@ -23,6 +23,11 @@ public class EmployeePayrollService {
         return this.employeePayrollDataList;
 
     }
+    public List<EmployeePayrollData> readEmployeePayrollDataWithinDate() throws SQLException {
+        this.employeePayrollDataList= employeePayrollDBService.readDataWithinDate();
+        return this.employeePayrollDataList;
+
+    }
 
     public void updateEmployeeAddress(String name, String address) {
         int result=employeePayrollDBService.updateEmployeeData(name,address);
