@@ -27,5 +27,11 @@ public class EmployeePayrollServiceTest {
 
 
     }
+    @Test
+    public void readDataWithinDate() throws SQLException {
+        EmployeePayrollService employeePayrollService= new EmployeePayrollService();
+        List<EmployeePayrollData> employeePayrollDataList=employeePayrollService.readEmployeePayrollDataWithinDate();
+        Assert.assertEquals(3,employeePayrollDataList.size());
+    }
 
 }
