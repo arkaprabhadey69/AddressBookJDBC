@@ -12,6 +12,7 @@ public class EmployeePayrollDBService {
     private static final String getAvg = " select avg(dept) as avg from employee_payroll where gender=? group by gender;";
     public static final String getMax = " select max(dept) as maxmin from employee_payroll where gender=? group by gender;";
     public static final String getMin = " select min(dept) as maxmin from employee_payroll where gender=? group by gender;";
+    public static final String getSum = " select sum(dept) as maxmin from employee_payroll where gender=? group by gender;";
     private EmployeePayrollDBService() {
 
     }
