@@ -34,6 +34,18 @@ public class EmployeePayrollService {
         return count;
 
     }
+    public int getAvgSalaryOfEmployees(String gender) throws SQLException {
+        int avg=0;
+        avg= employeePayrollDBService.getEmployeeAvg(gender);
+        return avg;
+
+    }
+    public int getMaxMinSalaryOfEmployees(String gender,String maxMin) throws SQLException {
+        int avg=0;
+        avg= employeePayrollDBService.getEmployeeMaxMin(gender,maxMin);
+        return avg;
+
+    }
 
 
     public void updateEmployeeAddress(String name, String address) {
