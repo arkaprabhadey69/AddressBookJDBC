@@ -28,6 +28,13 @@ public class EmployeePayrollService {
         return this.employeePayrollDataList;
 
     }
+    public int getCountOfEmployees(String gender) throws SQLException {
+        int count=0;
+        count= employeePayrollDBService.getEmployeeCount(gender);
+        return count;
+
+    }
+
 
     public void updateEmployeeAddress(String name, String address) {
         int result=employeePayrollDBService.updateEmployeeData(name,address);
