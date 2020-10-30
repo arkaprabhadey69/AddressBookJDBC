@@ -9,7 +9,9 @@ public class EmployeePayrollDBService {
     private PreparedStatement employeePayrollDataStatement;
     private static EmployeePayrollDBService employeePayrollDBService;
     private static final String getCount = "SELECT COUNT(*) as Count FROM employee_payroll WHERE gender =  ? ";
-
+    private static final String getAvg = " select avg(dept) as avg from employee_payroll where gender=? group by gender;";
+    public static final String getMax = " select max(dept) as maxmin from employee_payroll where gender=? group by gender;";
+    public static final String getMin = " select min(dept) as maxmin from employee_payroll where gender=? group by gender;";
     private EmployeePayrollDBService() {
 
     }
@@ -34,11 +36,12 @@ public class EmployeePayrollDBService {
         return employeePayrollDataList;
 
     }
-    public int getEmployeeCount(String gender)  {
-        int count=0;
+
+    public int getEmployeeCount(String gender) {
+        int count = 0;
         try (Connection connection = this.getConnection();) {
             employeePayrollDataStatement = connection.prepareStatement(getCount);
-            employeePayrollDataStatement.setString(1,gender);
+            employeePayrollDataStatement.setString(1, gender);
             ResultSet resultSet = employeePayrollDataStatement.executeQuery();
             while (resultSet.next()) {
                 count = resultSet.getInt("Count");
@@ -48,6 +51,39 @@ public class EmployeePayrollDBService {
         }
 
         return count;
+
+    }
+
+    public int getEmployeeAvg(String gender) {
+        int avg = 0;
+        try (Connection connection = this.getConnection();) {
+            employeePayrollDataStatement = connection.prepareStatement(getAvg);
+            employeePayrollDataStatement.setString(1, gender);
+            ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+            while (resultSet.next()) {
+                avg = resultSet.getInt("avg");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return avg;
+
+    }
+    public int getEmployeeMaxMin(String gender, String maxMin) {
+        int result = 0;
+        try (Connection connection = this.getConnection();) {
+            employeePayrollDataStatement = connection.prepareStatement(maxMin);
+            employeePayrollDataStatement.setString(1, gender);
+            ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+            while (resultSet.next()) {
+                result= resultSet.getInt("maxmin");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return result;
 
     }
 
