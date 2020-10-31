@@ -10,9 +10,9 @@ public class EmployeePayrollDBService {
     private static EmployeePayrollDBService employeePayrollDBService;
     private static final String getCount = "SELECT COUNT(*) as Count FROM employee_payroll WHERE gender =  ? ";
     private static final String getAvg = " select avg(dept) as avg from employee_payroll where gender=? group by gender;";
-    public static final String getMax = " select max(dept) as maxmin from employee_payroll where gender=? group by gender;";
-    public static final String getMin = " select min(dept) as maxmin from employee_payroll where gender=? group by gender;";
-    public static final String getSum = " select sum(dept) as maxmin from employee_payroll where gender=? group by gender;";
+    public static final String getMax = " Select max(basic_pay) as salary from employee_payroll e, payroll p where e.id = p.empID and e.gender =? group by e.gender";
+    public static final String getMin = " Select min(basic_pay) as salary from employee_payroll e, payroll p where e.id = p.empID and e.gender =? group by e.gender";
+    public static final String getSum = " Select sum(basic_pay) as salary from employee_payroll e, payroll p where e.id = p.empID and e.gender =? group by e.gender";
     private EmployeePayrollDBService() {
 
     }
@@ -78,7 +78,7 @@ public class EmployeePayrollDBService {
             employeePayrollDataStatement.setString(1, gender);
             ResultSet resultSet = employeePayrollDataStatement.executeQuery();
             while (resultSet.next()) {
-                result= resultSet.getInt("maxmin");
+                result= resultSet.getInt("salary");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -155,8 +155,8 @@ public class EmployeePayrollDBService {
                 String phone_number = resultSet.getString("phone_number");
                 String address = resultSet.getString("address");
                 String gender = resultSet.getString("gender");
-                LocalDate startdate = resultSet.getDate("start").toLocalDate();
-                employeePayrollDataList.add(new EmployeePayrollData(id, dept, name, phone_number, address, gender, startdate));
+                LocalDate startDate = resultSet.getDate("start").toLocalDate();
+                employeePayrollDataList.add(new EmployeePayrollData(id, dept, name, phone_number, address, gender, startDate));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -173,6 +173,26 @@ public class EmployeePayrollDBService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public EmployeePayrollData addEmployeeToPayroll(String dept, String name, String number, String address, String gender, LocalDate date) {
+        int id=-1;
+        EmployeePayrollData employeePayrollData=null;
+        String sql =String.format("Insert into employee_payroll(dept,name,phone_number,address,gender,start) values ('%s','%s','%s','%s','%s','%s')",dept , name,  number, address, gender,  Date.valueOf(date));
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            int rowAffected= statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
+            if(rowAffected==1){
+                ResultSet resultSet=statement.getGeneratedKeys();
+                if(resultSet.next())
+                    id=resultSet.getInt(1);
+            }
+            employeePayrollData= new EmployeePayrollData(id,dept , name,  number, address, gender,  date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeePayrollData;
 
     }
 }
