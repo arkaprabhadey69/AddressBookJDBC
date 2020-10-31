@@ -182,7 +182,6 @@ public class EmployeePayrollDBService {
         int id = -1;
         Connection connection = null;
         EmployeePayrollData employeePayrollData = null;
-       // String sql = String.format("Insert into employee_payroll(dept,name,phone_number,address,gender,start) values ('%s','%s','%s','%s','%s','%s')", dept, name, number, address, gender, Date.valueOf(date));
         try {
             connection = this.getConnection();
 
@@ -219,5 +218,15 @@ public class EmployeePayrollDBService {
         }
       return employeePayrollData;
 
+    }
+
+    public void removeEmployeeData(String name) {
+        String sql = String.format("update employee_payroll set isActive='F' where name='%s';",name);
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+             statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
