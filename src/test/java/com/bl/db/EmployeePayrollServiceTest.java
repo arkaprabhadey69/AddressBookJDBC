@@ -92,5 +92,17 @@ public class EmployeePayrollServiceTest {
         Assert.assertTrue(result);
 
     }
+@Test
+public void givenEmployee_WhenRemoved_ShouldMatch() throws SQLException {
+    EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+    employeePayrollService.readEmployeePayrollData();
+    employeePayrollService.removeEmployee("Charlie");
+    boolean result = employeePayrollService.checkEmployeePayrollSyncWithDB("Charlie");
+   Assert.assertTrue(result);
+
+
+}
+
+
 
 }
