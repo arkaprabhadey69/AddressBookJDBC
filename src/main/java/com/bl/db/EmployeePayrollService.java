@@ -59,7 +59,7 @@ public class EmployeePayrollService {
         if(employeePayrollData !=null) employeePayrollData.address= address;
 
     }
-    public void addEmployeeToPayroll(String dept , String name, String number, String address, String gender, LocalDate date) {
+    public void addEmployeeToPayroll(String dept , String name, String number, String address, String gender, LocalDate date) throws SQLException {
         employeePayrollDataList.add(employeePayrollDBService.addEmployeeToPayroll( dept , name,  number, address, gender,  date));
     }
 
@@ -69,6 +69,10 @@ public class EmployeePayrollService {
                 .filter(employeePayrollData -> employeePayrollData.name.equals(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void removeEmployee(String name){
+        employeePayrollDBService.removeEmployeeData(name);
     }
     public boolean checkEmployeePayrollSyncWithDB(String name) throws SQLException {
     List<EmployeePayrollData> employeePayrollDataList= employeePayrollDBService.getEmployeePayroll(name);
