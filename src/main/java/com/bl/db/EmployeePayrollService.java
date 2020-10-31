@@ -1,10 +1,14 @@
 package com.bl.db;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeePayrollService {
+
+   // public void addEmployeeToPayroll(String dept , String name, String number, String address, String gender, LocalDate date) {
+   // }
 
     public enum IOService {DB_IO, FILE_IO, REST_IO}
     public List<EmployeePayrollData> employeePayrollDataList;
@@ -55,6 +59,10 @@ public class EmployeePayrollService {
         if(employeePayrollData !=null) employeePayrollData.address= address;
 
     }
+    public void addEmployeeToPayroll(String dept , String name, String number, String address, String gender, LocalDate date) {
+        employeePayrollDataList.add(employeePayrollDBService.addEmployeeToPayroll( dept , name,  number, address, gender,  date));
+    }
+
 
     private EmployeePayrollData getEmployeePayrollData(String name) {
         return this.employeePayrollDataList.stream()
