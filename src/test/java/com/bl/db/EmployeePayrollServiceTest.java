@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,6 @@ public class EmployeePayrollServiceTest {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         List<EmployeePayrollData> employeePayrollDataList = employeePayrollService.readEmployeePayrollData();
         Assert.assertEquals(4, employeePayrollDataList.size());
-        // System.out.println(employeePayrollDataList.size());
 
     }
 
@@ -65,22 +65,31 @@ public class EmployeePayrollServiceTest {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         int minFemale= 0;
         minFemale = employeePayrollService.getMaxMinSalaryOfEmployees("F",EmployeePayrollDBService.getMin);
-        Assert.assertEquals(101, minFemale);
+        Assert.assertEquals(30000, minFemale);
         int maxFemale= 0;
         maxFemale = employeePayrollService.getMaxMinSalaryOfEmployees("F",EmployeePayrollDBService.getMax);
-        Assert.assertEquals(103, maxFemale);
+        Assert.assertEquals(50000, maxFemale);
         int maxMale= 0;
         maxMale = employeePayrollService.getMaxMinSalaryOfEmployees("M",EmployeePayrollDBService.getMax);
-        Assert.assertEquals(102, maxMale);
+        Assert.assertEquals(50000, maxMale);
         int minMale= 0;
         minMale = employeePayrollService.getMaxMinSalaryOfEmployees("M",EmployeePayrollDBService.getMin);
-        Assert.assertEquals(102, minMale);
+        Assert.assertEquals(40000, minMale);
         int sumMale= 0;
         sumMale = employeePayrollService.getMaxMinSalaryOfEmployees("M",EmployeePayrollDBService.getSum);
-        Assert.assertEquals(204, sumMale);
+        Assert.assertEquals(90000, sumMale);
         int sumFemale= 0;
         sumFemale = employeePayrollService.getMaxMinSalaryOfEmployees("F",EmployeePayrollDBService.getSum);
-        Assert.assertEquals(204, sumFemale);
+        Assert.assertEquals(80000, sumFemale);
+
+    }
+    @Test
+    public void givenNewEmployeeWhenAddedShouldSyncWithDB() throws SQLException {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+       employeePayrollService.readEmployeePayrollData();
+       employeePayrollService.addEmployeeToPayroll("101","Mark","908765","Swinhoe","M", LocalDate.now());
+        boolean result = employeePayrollService.checkEmployeePayrollSyncWithDB("Mark");
+        Assert.assertTrue(result);
 
     }
 
