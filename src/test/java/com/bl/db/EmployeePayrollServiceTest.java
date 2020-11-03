@@ -4,7 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -102,6 +105,26 @@ public void givenEmployee_WhenRemoved_ShouldMatch() throws SQLException {
 
 
 }
+@Test
+    public void given3Employees_WhenAdded_ShouldMatch() throws SQLException {
+        EmployeePayrollData[] arrayOfEmployees={ new EmployeePayrollData(0,"101","Dan","908765","Swinhoe","M", LocalDate.now()),
+                new EmployeePayrollData(0,"101","Mark","908765","Swinhoe","M", LocalDate.now()),
+                new EmployeePayrollData(0,"103","Modugu","9087657","Swinhoe","M", LocalDate.now())};
+        EmployeePayrollService employeePayrollService=new EmployeePayrollService();
+    Instant start= Instant.now();
+        employeePayrollService.addEmployeesWithoutThreads(Arrays.asList(arrayOfEmployees));
+        Instant end=Instant.now();
+        System.out.println("DurationWithoutThreads: "+Duration.between(start,end));
+        Assert.assertEquals(3,employeePayrollService.countEntries());
+    Instant start1= Instant.now();
+    employeePayrollService.addEmployeeWithThreads(Arrays.asList(arrayOfEmployees));
+    Instant end1=Instant.now();
+    System.out.println("DurationWithThreads: "+Duration.between(start1,end1));
+    Assert.assertEquals(3,employeePayrollService.countEntries());
+
+
+
+    }
 
 
 
