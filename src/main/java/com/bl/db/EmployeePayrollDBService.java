@@ -105,8 +105,8 @@ public class EmployeePayrollDBService {
 
     }
 
-    private Connection getConnection() throws SQLException {
-        String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?userSSL=false";
+    private synchronized Connection getConnection() throws SQLException {
+        String jdbcURL = "jdbc:mysql://127.0.0.1:3306/payroll_service?userSSL=false";
         String userName = "root";
         String password = "root";
         Connection connection;
@@ -196,7 +196,6 @@ public class EmployeePayrollDBService {
                 if (resultSet.next())
                     id = resultSet.getInt(1);
             }
-//            employeePayrollData = new EmployeePayrollData(id, dept, name, number, address, gender, date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
