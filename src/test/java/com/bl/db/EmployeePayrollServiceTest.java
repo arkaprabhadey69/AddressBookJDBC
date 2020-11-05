@@ -5,6 +5,7 @@ package com.bl.db;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -147,6 +148,14 @@ public class EmployeePayrollServiceTest {
         return employeePayrollData;
 
     }
+    public Response addEmployee(EmployeePayrollData employeePayrollData){
+        String empJSon=new Gson().toJson(employeePayrollData);
+        RequestSpecification request=RestAssured.given();
+        request.header("Content-Type","application/json");
+        request.body(empJSon);
+        return  request.post("/employees/create");
+
+    }
     @Test
     public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchCount(){
         EmployeePayrollData[] employeePayrollData=getEmployees();
@@ -155,6 +164,32 @@ public class EmployeePayrollServiceTest {
         Assert.assertEquals(2,count);
 
 
+    }
+    @Test
+    public void employeesWhenAddedShouldReturnTrue(){
+        EmployeePayrollData employeePayrollData1= new EmployeePayrollData(0,"101", "Yamini", "908765", "Swinhoe", "F", LocalDate.now());
+        Response response=addEmployee(employeePayrollData1);
+        int status=response.getStatusCode();
+        Assert.assertEquals(201,status);
+        EmployeePayrollData[] employeePayrollData=getEmployees();
+        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count=employeePayrollService.countEntries();
+        Assert.assertEquals(3,count);
+    }
+    @Test
+    public void multipleEmployeesWhenAddedShouldReturnTrue(){
+        EmployeePayrollData[] arrayOfEmployees = {new EmployeePayrollData(0, "101", "Dan", "908765", "Swinhoe", "M", LocalDate.now()),
+                new EmployeePayrollData(0, "101", "Mark", "908765", "Swinhoe", "M", LocalDate.now()),
+                new EmployeePayrollData(0, "103", "Modugu", "9087657", "Swinhoe", "M", LocalDate.now())};
+        for(EmployeePayrollData employeePayrollData:arrayOfEmployees) {
+            Response response = addEmployee(employeePayrollData);
+            int status = response.getStatusCode();
+            Assert.assertEquals(201, status);
+        }
+        EmployeePayrollData[] employeePayrollData=getEmployees();
+        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count=employeePayrollService.countEntries();
+        Assert.assertEquals(6,count);
     }
 
 
