@@ -24,7 +24,7 @@ public class EmployeePayrollServiceTest {
     public void readData() throws SQLException {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         List<EmployeePayrollData> employeePayrollDataList = employeePayrollService.readEmployeePayrollData();
-        Assert.assertEquals(4, employeePayrollDataList.size());
+        Assert.assertEquals(15, employeePayrollDataList.size());
 
     }
 
@@ -136,61 +136,102 @@ public class EmployeePayrollServiceTest {
 
 
     }
+
     @Before
-    public void setUp(){
-        RestAssured.baseURI="http://localhost";
-        RestAssured.port=4000;
+    public void setUp() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = 4000;
     }
-    public EmployeePayrollData[] getEmployees(){
-        Response response= RestAssured.get("/employees/list");
+
+    public EmployeePayrollData[] getEmployees() {
+        Response response = RestAssured.get("/employees/list");
         System.out.println(response.asString());
-        EmployeePayrollData[] employeePayrollData= new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
+        EmployeePayrollData[] employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData[].class);
         return employeePayrollData;
 
     }
-    public Response addEmployee(EmployeePayrollData employeePayrollData){
-        String empJSon=new Gson().toJson(employeePayrollData);
-        RequestSpecification request=RestAssured.given();
-        request.header("Content-Type","application/json");
+
+    public Response addEmployee(EmployeePayrollData employeePayrollData) {
+        String empJSon = new Gson().toJson(employeePayrollData);
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
         request.body(empJSon);
-        return  request.post("/employees/create");
+        return request.post("/employees/create");
 
     }
+
     @Test
-    public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchCount(){
-        EmployeePayrollData[] employeePayrollData=getEmployees();
-        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
-        int count=employeePayrollService.countEntries();
-        Assert.assertEquals(2,count);
+    public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchCount() {
+        EmployeePayrollData[] employeePayrollData = getEmployees();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count = employeePayrollService.countEntries();
+        Assert.assertEquals(4, count);
 
 
     }
+
     @Test
-    public void employeesWhenAddedShouldReturnTrue(){
-        EmployeePayrollData employeePayrollData1= new EmployeePayrollData(0,"101", "Yamini", "908765", "Swinhoe", "F", LocalDate.now());
-        Response response=addEmployee(employeePayrollData1);
-        int status=response.getStatusCode();
-        Assert.assertEquals(201,status);
-        EmployeePayrollData[] employeePayrollData=getEmployees();
-        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
-        int count=employeePayrollService.countEntries();
-        Assert.assertEquals(3,count);
+    public void employeesWhenAddedShouldReturnTrue() {
+        EmployeePayrollData employeePayrollData1 = new EmployeePayrollData(0, "101", "Nayan", "908765", "Swinhoe", "F", LocalDate.now());
+        Response response = addEmployee(employeePayrollData1);
+        int status = response.getStatusCode();
+        Assert.assertEquals(201, status);
+        EmployeePayrollData[] employeePayrollData = getEmployees();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count = employeePayrollService.countEntries();
+        Assert.assertEquals(5, count);
     }
+
     @Test
-    public void multipleEmployeesWhenAddedShouldReturnTrue(){
+    public void multipleEmployeesWhenAddedShouldReturnTrue() {
         EmployeePayrollData[] arrayOfEmployees = {new EmployeePayrollData(0, "101", "Dan", "908765", "Swinhoe", "M", LocalDate.now()),
-                new EmployeePayrollData(0, "101", "Mark", "908765", "Swinhoe", "M", LocalDate.now()),
-                new EmployeePayrollData(0, "103", "Modugu", "9087657", "Swinhoe", "M", LocalDate.now())};
-        for(EmployeePayrollData employeePayrollData:arrayOfEmployees) {
+                new EmployeePayrollData(0, "101", "Wood", "908765", "Swinhoe", "M", LocalDate.now()),
+                new EmployeePayrollData(0, "103", "Prince", "9087657", "Swinhoe", "M", LocalDate.now())};
+        for (EmployeePayrollData employeePayrollData : arrayOfEmployees) {
             Response response = addEmployee(employeePayrollData);
             int status = response.getStatusCode();
             Assert.assertEquals(201, status);
         }
-        EmployeePayrollData[] employeePayrollData=getEmployees();
-        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
-        int count=employeePayrollService.countEntries();
-        Assert.assertEquals(6,count);
+        EmployeePayrollData[] employeePayrollData = getEmployees();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count = employeePayrollService.countEntries();
+        Assert.assertEquals(8, count);
     }
 
+    @Test
+    public void givenNameShouldUpdateDept() {
+        EmployeePayrollData[] employeePayrollData = getEmployees();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        employeePayrollService.updateEmployeeAddressUsingREST("Pankaj", "Hazra");
+        EmployeePayrollData employeePayrollData1 = employeePayrollService.getEmployeePayrollData("Pankaj");
+        System.out.println(employeePayrollData1.address);
+        String empJSon = new Gson().toJson(employeePayrollData);
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
+        request.body(empJSon);
+        Response response = request.put("/employees/update/" + employeePayrollData1.id);
+        int status = response.getStatusCode();
+        Assert.assertEquals(200, status);
 
+
+    }
+    @Test
+    public void givenNameShouldDeleteDept() {
+        EmployeePayrollData[] employeePayrollData = getEmployees();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        EmployeePayrollData employeePayrollData1 = employeePayrollService.getEmployeePayrollData("Wood");
+        String empJSon = new Gson().toJson(employeePayrollData);
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
+        request.body(empJSon);
+        Response response = request.delete("/employees/delete/" + employeePayrollData1.id);
+        int status = response.getStatusCode();
+        Assert.assertEquals(200, status);
+        EmployeePayrollData[] employeePayrollData2 = getEmployees();
+        Assert.assertEquals(7,employeePayrollData2.length);
+
+
+    }
 }
+
+
