@@ -1,6 +1,12 @@
 package com.bl.db;
 
+//import io.restassured.RestAssured;
+//import io.restassured.response.Response;
+import com.google.gson.Gson;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -126,6 +132,27 @@ public class EmployeePayrollServiceTest {
         Instant end1 = Instant.now();
         System.out.println("DurationWithThreads: " + Duration.between(start1, end1));
         Assert.assertEquals(16, employeePayrollService.countEntries());
+
+
+    }
+    @Before
+    public void setUp(){
+        RestAssured.baseURI="http://localhost";
+        RestAssured.port=4000;
+    }
+    public EmployeePayrollData[] getEmployees(){
+        Response response= RestAssured.get("/employees/list");
+        System.out.println(response.asString());
+        EmployeePayrollData[] employeePayrollData= new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
+        return employeePayrollData;
+
+    }
+    @Test
+    public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchCount(){
+        EmployeePayrollData[] employeePayrollData=getEmployees();
+        EmployeePayrollService employeePayrollService=new EmployeePayrollService(Arrays.asList(employeePayrollData));
+        int count=employeePayrollService.countEntries();
+        Assert.assertEquals(2,count);
 
 
     }
