@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class EmployeePayrollService {
 
+
     public enum IOService {DB_IO, FILE_IO, REST_IO}
 
     public List<EmployeePayrollData> employeePayrollDataList;
@@ -18,6 +19,11 @@ public class EmployeePayrollService {
     public EmployeePayrollService() {
         employeePayrollDBService = EmployeePayrollDBService.getInstance();
         this.employeePayrollDataList = new ArrayList<>();
+    }
+    public EmployeePayrollService(List<EmployeePayrollData> employeePayrollDataList) {
+        super();
+        this.employeePayrollDataList = new ArrayList<>(employeePayrollDataList);
+
     }
 
     public List<EmployeePayrollData> readEmployeePayrollData() throws SQLException {
@@ -57,6 +63,11 @@ public class EmployeePayrollService {
     public void updateEmployeeAddress(String name, String address) {
         int result = employeePayrollDBService.updateEmployeeData(name, address);
         if (result == 0) return;
+        EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+        if (employeePayrollData != null) employeePayrollData.address = address;
+
+    }
+    public void updateEmployeeAddressUsingREST(String name, String address){
         EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
         if (employeePayrollData != null) employeePayrollData.address = address;
 
@@ -128,7 +139,7 @@ public class EmployeePayrollService {
     }
 
 
-    private EmployeePayrollData getEmployeePayrollData(String name) {
+    public EmployeePayrollData getEmployeePayrollData(String name) {
         return this.employeePayrollDataList.stream()
                 .filter(employeePayrollData -> employeePayrollData.name.equals(name))
                 .findFirst()
